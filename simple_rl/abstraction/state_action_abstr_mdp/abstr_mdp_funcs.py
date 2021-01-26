@@ -13,7 +13,7 @@ from simple_rl.abstraction.action_abs.ActionAbstractionClass import ActionAbstra
 # -- Single Level --
 # ------------------
 
-def make_abstr_mdp(mdp, state_abstr, action_abstr=None, step_cost=0.0, sample_rate=5):
+def make_abstr_mdp(mdp, state_abstr, action_abstr=None, step_cost=0.0, sample_rate=5, max_rollout=10):
 	'''
 	Args:
 		mdp (MDP)
@@ -43,9 +43,9 @@ def make_abstr_mdp(mdp, state_abstr, action_abstr=None, step_cost=0.0, sample_ra
 		total_reward = 0
 		for ground_s in lower_states:
 			for sample in range(sample_rate):
-				s_prime, reward = abstr_action.rollout(ground_s, lower_reward_func, lower_trans_func, step_cost=step_cost)
+				s_prime, reward = abstr_action.rollout(ground_s, lower_reward_func, lower_trans_func, max_rollout_depth=max_rollout, step_cost=step_cost)
 				total_reward += float(reward) / (len(lower_states) * sample_rate) # Add weighted reward.
-
+		print("Abstract Reward Lambda returning...")
 		return total_reward
 
 	def abstr_transition_lambda(abstr_state, abstr_action):
@@ -69,14 +69,14 @@ def make_abstr_mdp(mdp, state_abstr, action_abstr=None, step_cost=0.0, sample_ra
 		total_reward = 0
 		for ground_s in lower_states:
 			for sample in range(sample_rate):
-				s_prime, reward = abstr_action.rollout(ground_s, lower_reward_func, lower_trans_func)
+				s_prime, reward = abstr_action.rollout(ground_s, lower_reward_func, lower_trans_func, max_rollout_depth=max_rollout)
 				s_prime_prob_dict[s_prime] += (1.0 / (len(lower_states) * sample_rate)) # Weighted average.
 		
 		# Form distribution and sample s_prime.
 		next_state_sample_list = list(np.random.multinomial(1, list(s_prime_prob_dict.values())).tolist())
 		end_ground_state = list(s_prime_prob_dict.keys())[next_state_sample_list.index(1)]
 		end_abstr_state = state_abstr.phi(end_ground_state)
-
+		print("Abstract Transition Lambda returning...")
 		return end_abstr_state
 	
 	# Make the components of the Abstract MDP.

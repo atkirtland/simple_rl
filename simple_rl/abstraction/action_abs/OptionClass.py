@@ -75,12 +75,14 @@ class Option(object):
 
 		if self.is_init_true(cur_state):
 			# First step.
-			total_reward += reward_func(cur_state, self.act(cur_state)) - step_cost
-			cur_state = transition_func(cur_state, self.act(cur_state))
+			next_state = transition_func(cur_state, self.act(cur_state))
+			total_reward += reward_func(cur_state, self.act(cur_state), next_state) - step_cost
+			cur_state = next_state
 			# Act until terminal.
-			while not self.is_term_true(cur_state) and not cur_state.is_terminal():
-				total_reward += reward_func(cur_state, self.act(cur_state)) - step_cost
-				cur_state = transition_func(cur_state, self.act(cur_state))
+			while not self.is_term_true(cur_state) and not cur_state.is_terminal() and rollout_depth < max_rollout_depth:
+				next_state = transition_func(cur_state, self.act(cur_state)) # act
+				total_reward += reward_func(cur_state, self.act(cur_state), next_state) - step_cost
+				cur_state = next_state
 				rollout_depth += 1
 
 		return cur_state, total_reward

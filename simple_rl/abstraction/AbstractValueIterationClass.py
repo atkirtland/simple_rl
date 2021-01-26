@@ -28,7 +28,7 @@ class AbstractValueIteration(ValueIteration):
         # Grab ground state space.
         vi = ValueIteration(self.ground_mdp, delta=0.001, max_iterations=1000, sample_rate=5)
         state_space = vi.get_states()
-
+        
         # Make the abstract MDP.
         self.state_abstr = state_abstr if state_abstr is not None else StateAbstraction(ground_state_space=state_space)
         self.action_abstr = action_abstr if action_abstr is not None else ActionAbstraction(prim_actions=ground_mdp.get_actions())
