@@ -1,63 +1,21 @@
-'''
-simple_rl
-	abstraction/
-		action_abs/
-		state_abs/
-		...
-	agents/
-		AgentClass.py
-		QLearningAgentClass.py
-		RandomAgentClass.py
-		RMaxAgentClass.py
-		...
-	experiments/
-		ExperimentClass.py
-		ExperimentParameters.py
-	mdp/
-		MDPClass.py
-		StateClass.py
-	planning/
-		BeliefSparseSamplingClass.py
-		MCTSClass.py
-		PlannerClass.py
-		ValueIterationClass.py
-	pomdp/
-		BeliefMDPClass.py
-		BeliefStateClass.py
-		BeliefUpdaterClass.py
-		POMDPClass.py
-	tasks/
-		chain/
-			ChainMDPClass.py
-			ChainStateClass.py
-		grid_world/
-			GridWorldMPDClass.py
-			GridWorldStateClass.py
-		...
-	utils/
-		chart_utils.py
-		make_mdp.py
-	run_experiments.py
+# Classes.
+from simple_rl.abstraction.AbstractionWrapperClass import AbstractionWrapper
+from simple_rl.abstraction.AbstractValueIterationClass import AbstractValueIteration
+from simple_rl.abstraction.state_abs.StateAbstractionClass import StateAbstraction
+from simple_rl.abstraction.state_abs.ProbStateAbstractionClass import ProbStateAbstraction
+from simple_rl.abstraction.action_abs.ActionAbstractionClass import ActionAbstraction
+from simple_rl.abstraction.action_abs.InListPredicateClass import InListPredicate
+from simple_rl.abstraction.action_abs.OptionClass import Option
+from simple_rl.abstraction.action_abs.PolicyClass import Policy
+from simple_rl.abstraction.action_abs.PolicyFromDictClass import PolicyFromDict
+from simple_rl.abstraction.action_abs.PredicateClass import Predicate
+from simple_rl.abstraction.features.FeatureWrapperClass import FeatureWrapper
+from simple_rl.abstraction.features.TileCodingClass import TileCoding
+from simple_rl.abstraction.features.BucketCodingClass import BucketCoding
+from simple_rl.abstraction.features.RBFCodingClass import RBFCoding
 
-Author and Maintainer: David Abel (david_abel.github.io)
-Last Updated: March 27th, 2019
-Contact: david_abel@brown.edu
-License: Apache
-'''
-# Fix xrange to cooperate with python 2 and 3.
-try:
-    xrange
-except NameError:
-    xrange = range
+# Scripts.
+from simple_rl.abstraction.state_abs import sa_helpers, indicator_funcs
+from simple_rl.abstraction.action_abs import aa_helpers
+from simple_rl.abstraction.state_action_abstr_mdp import abstr_mdp_funcs
 
-# Fix input to cooperate with python 2 and 3.
-try:
-   input = raw_input
-except NameError:
-   pass
-
-# Imports.
-import simple_rl.abstraction, simple_rl.agents, simple_rl.experiments, simple_rl.mdp, simple_rl.planning, simple_rl.tasks, simple_rl.utils
-import simple_rl.run_experiments
-
-from simple_rl._version import __version__
