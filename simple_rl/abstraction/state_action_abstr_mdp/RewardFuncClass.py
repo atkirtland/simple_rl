@@ -7,7 +7,7 @@ class RewardFunc(object):
     def __init__(self, reward_func_lambda, state_space, action_space):
         self.reward_dict = make_dict_from_lambda(reward_func_lambda, state_space, action_space)
 
-    def reward_func(self, state, action):
+    def reward_func(self, state, action, s_prime=None):
         return self.reward_dict[state][action]
 
 def make_dict_from_lambda(reward_func_lambda, state_space, action_space, sample_rate=1):

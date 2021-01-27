@@ -13,7 +13,7 @@ from simple_rl.planning.ValueIterationClass import ValueIteration
 class AbstractValueIteration(ValueIteration):
     ''' AbstractValueIteration: Runs ValueIteration on an abstract MDP induced by the given state and action abstraction '''
 
-    def __init__(self, ground_mdp, state_abstr=None, action_abstr=None, vi_sample_rate=5, max_iterations=1000, amdp_sample_rate=5, delta=0.001):
+    def __init__(self, ground_mdp, state_abstr=None, action_abstr=None, vi_sample_rate=5, max_iterations=1000, amdp_sample_rate=5, delta=0.001, max_rollout=100):
         '''
         Args:
             ground_mdp (simple_rl.MDP)
@@ -32,7 +32,7 @@ class AbstractValueIteration(ValueIteration):
         # Make the abstract MDP.
         self.state_abstr = state_abstr if state_abstr is not None else StateAbstraction(ground_state_space=state_space)
         self.action_abstr = action_abstr if action_abstr is not None else ActionAbstraction(prim_actions=ground_mdp.get_actions())
-        abstr_mdp = abstr_mdp_funcs.make_abstr_mdp(ground_mdp, self.state_abstr, self.action_abstr, step_cost=0.0, sample_rate=amdp_sample_rate)
+        abstr_mdp = abstr_mdp_funcs.make_abstr_mdp(ground_mdp, self.state_abstr, self.action_abstr, step_cost=0.0, sample_rate=amdp_sample_rate, max_rollout=max_rollout)
 
         # Create VI with the abstract MDP.
         ValueIteration.__init__(self, abstr_mdp, vi_sample_rate, delta, max_iterations)
