@@ -74,6 +74,9 @@ class Experiment(object):
         self.cumulative_plot = cumulative_plot
         self.name = str(self.mdp)
         self.rewards = defaultdict(list)
+        self.states = defaultdict(list)
+        self.next_states = defaultdict(list)
+        self.actions = defaultdict(list)
         self.times = defaultdict(list)
         if dir_for_plot == "":
             self.exp_directory = os.path.join(Experiment.RESULTS_DIR, self.name)
@@ -244,6 +247,9 @@ class Experiment(object):
                 raise ValueError("(simple_rl) Experiment Error: can't track markov games per step. (set rew_step_count to 1).")
             else:
                 self.rewards[agent] += [self.rew_since_count + reward]
+                self.states[agent] += [state]
+                self.actions[agent] += [action]
+                self.next_states[agent] += [next_state]
                 self.times[agent] += [time_taken]
                 self.rew_since_count = 0
             self.steps_since_added_r = 1
@@ -262,6 +268,9 @@ class Experiment(object):
         if self.is_episodic:
             for x in range(num_times_to_write):
                 self.write_datum_to_file(agent, sum(self.rewards[agent]))
+                self._write_extra_datum_to_file(None, agent, self.states[agent], "state")
+                self._write_extra_datum_to_file(None, agent, self.actions[agent], "action")
+                self._write_extra_datum_to_file(None, agent, self.next_states[agent], "next_state")
                 self.write_datum_to_file(agent, sum(self.times[agent]), extra_dir="times/")
                 if self.track_success:
                     self.write_datum_to_file(agent, int(self.rewards[agent][-1] >= self.success_reward), extra_dir="success/")
@@ -269,7 +278,12 @@ class Experiment(object):
             for x in range(num_times_to_write):
                 for step_reward in self.rewards[agent]:
                     self.write_datum_to_file(agent, step_reward)
-        self.rewards[agent] = []
+                for step_state in self.states[agent]:
+                    self.write_datum_to_file(agent, step_state)
+                for step_action in self.actions[agent]:
+                    self.write_datum_to_file(agent, step_action)
+                for step_next_state in self.next_states[agent]:
+                    self.write_datum_to_file(agent, step_next_state)
 
     def end_of_instance(self, agent):
         '''
